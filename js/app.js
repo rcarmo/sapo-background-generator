@@ -44,7 +44,8 @@ function setNewTrianglifier() {
                           "x_gradient": triOptions.xColors(),
                           "y_gradient": triOptions.yColors(),
                           "cellpadding": triOptions.cellpadding(),
-                          "noiseIntensity": 0
+                          "noiseIntensity": 0,
+                          "strokeOpacity": 0
                         });
 }
 
@@ -78,39 +79,36 @@ function convertSVGtoPNG() {
 
 // Class representing a single colour palette made up of multiple colours
 // Colours are simply hex strings
-function Palette(name, colors) {
+function Palette(name, colors, lines) {
   this.name = name;
   this.colors = colors;
+  this.lines = lines;
 }
 
-// Retrieves colour palettes using the Colourlovers API, creating a new Palette
-// for each
+// Builds a set of predefined palettes from the SAPO brand manual
 function getColourSchemes(limit) {
-  $.ajax({
-      type: "GET",
-      url: "http://www.colourlovers.com/api/palettes/top?jsonCallback=?",
-      data: { numResults: limit },
-      dataType: 'json',
-      success: function(data){
-        $(data).each(function() {
-          var palette_hash = this;
-          var palette_name = palette_hash["title"];
-          var colors = [];
+  var sapo_palettes = [
+    {"title": "base greens", "colors": ["7AB800", "69A618", "5B8F22"], "lines":"7AB800"},
+    {"title": "base b&w",    "colors": ["000000", "6E6E6E", "FFFFFF"], "lines":"6E6E6E"}
+  ];
 
-          $(palette_hash["colors"]).each(function(){
-            colors.push("#" + this);
-          });
+  $(sapo_palettes).each(function() {
+    var palette_hash = this;
+    var palette_name = palette_hash["title"];
+    var colors = [];
 
-          palettes.push(new Palette(palette_name, colors));
-        });
-        addColourList();
+    $(palette_hash["colors"]).each(function(){
+    colors.push("#" + this);
+    });
 
-        currentXPalette = palettes[0];
-        currentYPalette = palettes[0];
-        updateScreen();
-        $("#loading").fadeOut(500);
-      }
+    palettes.push(new Palette(palette_name, colors));
   });
+  addColourList();
+
+  currentXPalette = palettes[0];
+  currentYPalette = palettes[0];
+  updateScreen();
+  $("#loading").fadeOut(500);
 }
 
 // Adds a scrollable div to the page, containing clickable
@@ -195,6 +193,22 @@ $(".screen-size-input").on("change", function(){
   updateScreen();
 });
 
+$("#flip-gradient").on("click", function(){
+    switch($("[type='radio']:checked").val()) {
+      case "x":
+        currentXPalette.colors.reverse();
+        break;
+      case "y":
+        currentYPalette.colors.reverse();
+        break;
+      case "z":
+        currentXPalette.colors.reverse();
+        currentYPalette.colors.reverse();
+        break;
+    }
+  updateScreen();
+});
+
 $("#randomise-colours").on("click", function(){
   currentXPalette = palettes[(Math.floor(Math.random() * NO_OF_PALETTES_TO_RETRIEVE))];
   currentYPalette = palettes[(Math.floor(Math.random() * NO_OF_PALETTES_TO_RETRIEVE))];
@@ -205,14 +219,6 @@ $("#randomise-colours").on("click", function(){
 $("#generate").on('click', function() {
   updateScreen();
 });
-
-// $(colorbrewer).each(function(){
-//   $(this).each(function(){
-//     $(this).each(function(){
-//         console.log(this);
-//       });
-//     });
-//   });
 
 function addColorbrewerPalettes() {
   Object.keys(colorbrewer).forEach(function(key){
