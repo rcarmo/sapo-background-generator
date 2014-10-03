@@ -35,7 +35,7 @@ initialiseApp();
 
 function initialiseApp() {
   initiateSliders();
-  getColourSchemes(NO_OF_PALETTES_TO_RETRIEVE);
+  getColourSchemes();
 }
 
 function setNewTrianglifier() {
@@ -89,7 +89,11 @@ function Palette(name, colors, lines) {
 function getColourSchemes(limit) {
   var sapo_palettes = [
     {"title": "base greens", "colors": ["7AB800", "69A618", "5B8F22"], "lines":"7AB800"},
-    {"title": "base b&w",    "colors": ["000000", "6E6E6E", "FFFFFF"], "lines":"6E6E6E"}
+    {"title": "base b&w",    "colors": ["000000", "6E6E6E", "FFFFFF"], "lines":"6E6E6E"},
+    {"title": "reddish",     "colors": ["962319", "BE4B19", "AA3773"], "lines":"6E6E6E"},
+    {"title": "purplish",    "colors": ["AA3773", "5A4678", "0F4B5F"], "lines":"6E6E6E"},
+    {"title": "bluish",      "colors": ["0F4B5F", "196446", "416E14"], "lines":"6E6E6E"},
+    {"title": "greenish",    "colors": ["196446", "416E14", "6E6E6E"], "lines":"6E6E6E"},
   ];
 
   $(sapo_palettes).each(function() {
@@ -210,8 +214,8 @@ $("#flip-gradient").on("click", function(){
 });
 
 $("#randomise-colours").on("click", function(){
-  currentXPalette = palettes[(Math.floor(Math.random() * NO_OF_PALETTES_TO_RETRIEVE))];
-  currentYPalette = palettes[(Math.floor(Math.random() * NO_OF_PALETTES_TO_RETRIEVE))];
+  currentXPalette = palettes[(Math.floor(Math.random() * palettes.length))];
+  currentYPalette = palettes[(Math.floor(Math.random() * palettes.length))];
   $(".palette-cont").css("border", "none");
   updateScreen();
 });
