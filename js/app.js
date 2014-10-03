@@ -88,8 +88,8 @@ function Palette(name, colors, lines) {
 // Builds a set of predefined palettes from the SAPO brand manual
 function getColourSchemes(limit) {
   var sapo_palettes = [
-    {"title": "base greens", "colors": ["7AB800", "69A618", "5B8F22"], "lines":"7AB800"},
     {"title": "base b&w",    "colors": ["000000", "6E6E6E", "FFFFFF"], "lines":"6E6E6E"},
+    {"title": "base greens", "colors": ["7AB800", "69A618", "5B8F22"], "lines":"7AB800"},
     {"title": "reddish",     "colors": ["962319", "BE4B19", "AA3773"], "lines":"6E6E6E"},
     {"title": "purplish",    "colors": ["AA3773", "5A4678", "0F4B5F"], "lines":"6E6E6E"},
     {"title": "bluish",      "colors": ["0F4B5F", "196446", "416E14"], "lines":"6E6E6E"},
@@ -133,6 +133,7 @@ function addColourList() {
     });
     $("#colour-list").append(cont);
   });
+
 
   $("#colour-list").on("click", ".palette-cont", function() {
     var paletteIndex = $(this).data("palette-index");
@@ -196,6 +197,7 @@ function initiateSliders() {
 $(".screen-size-input").on("change", function(){
   updateScreen();
 });
+
 
 $("#flip-gradient").on("click", function(){
     switch($("[type='radio']:checked").val()) {
